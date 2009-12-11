@@ -44,6 +44,7 @@
  * @author Bryce Mickler <bryce@brycemickler.com>
  * @copyright 2009
  * @license http://www.freebsd.org/copyright/freebsd-license.html Free BSD License
+ *
  * @param array $predefined			the global array that we are going to search
  * @param string $key				the name of the new variable
  * @param array $def				the definition of the variable used to create
