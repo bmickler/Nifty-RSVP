@@ -24,12 +24,11 @@ class classParent
     protected $mdb2;
 
     /**
-     * Configuration bulletin board
+     * classParent constructor
+     * Mainly just stores the database connection object
      *
-     * @var array
+     * @param array $mdb2
      */
-    public $config;
-
     public function __construct($mdb2)
     {
         $this->db = $mdb2;
@@ -60,8 +59,6 @@ class classParent
      *
      * @return string
      * @author Bryce Mickler
-     * @version 1.0
-     * @since 1.0
      */
     public function now()
     {
@@ -80,6 +77,11 @@ class classParent
         return date('F d\, Y h:i:s A');
     }
 
+    /**
+     * returns the date and time in the form: March 10, 2001
+     *
+     * @return unknown
+     */
     public function date()
     {
         return date("F j, Y");

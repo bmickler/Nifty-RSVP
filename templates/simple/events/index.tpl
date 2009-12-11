@@ -17,17 +17,18 @@
 <body>
 <div class="container">
 
-	<div id="header" class="span-24 header">&nbsp;</div>
+	<div id="header" class="span-24 header">{$EVENT_NAME}</div>
 
 	<hr/>
 
     {if $EVENT_CREATED == 'yes'}
 
-	<div class="span-12 success">
+    <div class="span-4">&nbsp;</div>
+	<div class="span-12 success last">
 
-		<h2>Your event has been created!</h2>
+		<h2>Congratulations! Your event has been created</h2>
 
-		<p>Congratulations.  Now you've got to let everyone know about your event so they can RSVP.  Here's how:</p>
+		<p>Now you've got to let everyone know about your event so they can RSVP.  Here's how:</p>
 
 		<ul>
 			<li>1.  Copy this page's URL.</li>
@@ -36,35 +37,35 @@
 			<li>4.  Don't forget to RSVP yourself by filling out the form below.</li>
 		</ul>
 
-		<p>That's it.  Thanks for using NiftyRSVP.</p>
+		<p>That's it!  Thanks for using NiftyRSVP.</p>
 
 	</div>
-	
+
 	<div class="span-12">&nbsp;</div>
-	
+
 	<hr/>
-		
+
     {/if}
-	
+
 	<div class="span-9">
-	
+
 		<h3 class="caps">When</h3>
 		<p class="box quiet">{$EVENT_DATE_TIME}</p>
-	
+
 		<h3 class="caps">Where</h3>
 		<p class="box quiet">{$EVENT_LOCATION}</p>
-	
+
 		<h3 class="caps">Notes</h3>
 		<p class="box quiet">{$EVENT_NOTES}</p>
-		
+
 	</div>
-	
+
 	<div class="span-3">&nbsp;</div>
-	
+
 	<div class="span-12 last">
-	
+
 		<h2 class="alt">RSVP</h2>
-		
+
 		<p>
 			<form id="form" action="index.php" method="post">
 			<input type="hidden" name="e_id" value="{$EVENT_ID}" />
@@ -78,7 +79,7 @@
 		</p>
 
 		<p>
-		
+
 			<label for="attending">Will you attend?</label><br/>
 			<select name="attending" id="attending">
 				<option value="" selected="selected">-- Select an option --</option>
@@ -86,9 +87,9 @@
 				<option value="yes">YES, I will be attending!</option>
 				<option value="no">NO, I will not attend.</option>
 			</select>
-			
+
 		</p>
-		
+
 		<p>
 			<input type="submit" name="submit" id="submit" />
 			</form>
@@ -97,29 +98,31 @@
 	</div>
 
 	<hr/>
-		
-	<div class="span-12">
 
-		<h2 class="alt">Attending</h2>
+	<div class="span-3">&nbsp;</div>
+	<div class="span-9">
+
+		<h2 class="alt">Attending({$EVENT_ATTENDING_COUNT})</h2>
 
 		{foreach name=attending from=$EVENT_ATTENDEES key=k item=i}
 
 			<h3 class="loud">{$i}</h3>
-			
+
 		{/foreach}
 
 	</div>
 
-	<div class="span-12 last">
+	<div class="span-3">&nbsp;</div>
+	<div class="span-9 last">
 
-		<h2 class="alt">Not Attending</h2>
+		<h2 class="alt">Not Attending ({$EVENT_NOT_ATTENDING_COUNT})</h2>
 
 		{foreach name=not_attending from=$EVENT_NON_ATTENDEES key=k item=i}
 
 			<h3 class="loud">{$i}</h3>
-			
+
 		{/foreach}
 
 	</div>
-		
+
 {$FOOTER}

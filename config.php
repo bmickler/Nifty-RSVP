@@ -10,18 +10,18 @@
  * @copyright 2009
  * @license http://www.freebsd.org/copyright/freebsd-license.html Free BSD License
  */
-if(!defined('IN_NIFTY')){ die("Hacking attempt"); }
+if(!defined('IN_NIFTY')){die("Hacking attempt");}//  Security feature.  This file cannot be called directly
+
+define('WEB_PATH','http://aag0k8ubm63051/nifty-rsvp/');
+define('FILE_PATH','c:\http\www\nifty-rsvp\\');
+define('DOMAIN_NAME','aag0k8ubm63051');
+
+//define('WEB_PATH','http://bluenote/niftyrsvp/');
+//define('FILE_PATH','/var/www/niftyrsvp/');
+//define('DOMAIN_NAME','bluenote');
 
 define('HTML_TITLE','Nifty RSVP');
 define('SITE_TITLE','Nifty RSVP');
-
-//define('WEB_PATH','http://aag0k8ubm63051/niftyrsvp/');
-define('WEB_PATH','http://bluenote/niftyrsvp/');
-//define('FILE_PATH','c:\http\www\niftyrsvp\\');
-define('FILE_PATH','/var/www/niftyrsvp/');
-//define('DOMAIN_NAME','aag0k8ubm63051');
-define('DOMAIN_NAME','bluenote');
-
 define('CURRENT_TEMPLATE','simple');
 define('CURRENT_LANGUAGE', 'english');
 define('SESSION_TIMEOUT',11120); //max age (in seconds) before session expires & logs out user

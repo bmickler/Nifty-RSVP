@@ -14,7 +14,9 @@
 error_reporting(0);
 $scriptStartTime = microtime(true);
 
-if(!defined('IN_NIFTY')){ die("Hacking attempt"); }
+//  Security feature.  This file cannot be called directly
+if(!defined('IN_NIFTY')){die("Hacking attempt");}
+
 require_once('config.php');
 
 

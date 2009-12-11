@@ -23,13 +23,6 @@ class eventMgr extends classParent
     protected $mdb2;
 
     /**
-     * Array for site configuration settings held in the database
-     *
-     * @var array
-     */
-    public $config;
-
-    /**
      * Constructor for the client
      *
      * @param array $mdb2
@@ -39,16 +32,35 @@ class eventMgr extends classParent
         $this->db = $mdb2;
     }
 
+    /**
+     * Enters the event's details into the database
+     * Grabs the next available PEAR::MDB2 sequence id and inserts the event
+     * data into the database.
+     *
+     * @param array $args
+     * @return string $e_url The unique URL for the newly created event page
+     */
 	public function createEvent($args)
 	{
+		//  get a unique event page URL
 		$e_url = $this->createEventUrl($args['e_name']);
 
+		//  insert the event details into the database
 		$nextId = $this->db->nextId(TABLE_EVENTS);
 		if (PEAR::isError($nextId)) {
 			throw new sqlException('Unable to get the next event sequence id. MDB2 says: ' . $nextId->getMessage(), 0);
 		}
 
-		$sql = 'INSERT INTO ' . TABLE_EVENTS . " (id, created, e_name, e_date_time, e_location, e_notes, e_url, e_event_viewed) VALUES($nextId,'{$this->date()}','{$args['e_name']}','{$args['e_date_time']}','{$args['e_location']}','{$args['e_notes']}','$e_url','no')";
+		$sql = 'INSERT INTO ' . TABLE_EVENTS .
+			" (id, created, e_name, e_date_time, e_location, e_notes, e_url, e_event_viewed) VALUES(" .
+			$this->db->quote($nextId, 				'integer') . ', ' .
+			$this->db->quote($this->date(), 		'text') . ', ' .
+			$this->db->quote($args['e_name'], 		'text') . ', ' .
+			$this->db->quote($args['e_date_time'], 	'text') . ', ' .
+			$this->db->quote($args['e_location'], 	'text') . ', ' .
+			$this->db->quote($args['e_notes'], 		'text') . ', ' .
+			$this->db->quote($e_url, 'text') .
+			', \'no\')';
 
 		$res = $this->db->exec($sql);
         if (PEAR::isError($res)) {
@@ -113,6 +125,13 @@ class eventMgr extends classParent
         return $new_url;
 	}
 
+	/**
+	 * Returns the details of an event
+	 * Given an event id, this returns the event's details.
+	 *
+	 * @param int $id
+	 * @return array
+	 */
 	public function getDetails($id)
 	{
 		$sql = 'SELECT * FROM ' . TABLE_EVENTS . ' WHERE e_url=\''. $id . '\' LIMIT 1';
@@ -135,6 +154,14 @@ class eventMgr extends classParent
         return $details;
 	}
 
+	/**
+	 * Registers an invitee as attending or not attending
+	 * Processes the RSVP form result to record whether an invitee will attend the
+	 * event or not
+	 *
+	 * @param array $args
+	 * @return bool
+	 */
 	public function registerAttendee($args)
 	{
 		$nextId = $this->db->nextId(TABLE_ATTENDEES);
@@ -144,7 +171,13 @@ class eventMgr extends classParent
 
 		$attending = ($args['attending'] == 'yes') ? 1 : 0;
 
-		$sql = 'INSERT INTO ' . TABLE_ATTENDEES . " (id,event_id,name,email,attending) VALUES($nextId,{$args['e_id']},'{$args['name']}','{$args['email']}','$attending')";
+		$sql = 'INSERT INTO ' . TABLE_ATTENDEES .
+			" (id,event_id,name,email,attending) VALUES(" .
+			$this->db->quote($nextId,			'integer') . ', ' .
+			$this->db->quote($args['e_id'],		'integer') . ', ' .
+			$this->db->quote($args['name'], 	'text') . ', ' .
+			$this->db->quote($args['email'],	'text') . ', ' .
+			$this->db->quote($attending,		'text') . ')';
 
 		$res = $this->db->exec($sql);
         if (PEAR::isError($res)) {
@@ -154,6 +187,13 @@ class eventMgr extends classParent
         return true;
 	}
 
+	/**
+	 * Grabs an event's unique URL
+	 * Given the integer id of the event, grabs and returns the unique URL
+	 *
+	 * @param int $id
+	 * @return string
+	 */
 	public function getUrlById($id)
 	{
 		$sql = 'SELECT e_url FROM ' . TABLE_EVENTS . ' WHERE id=\''. $id . '\' LIMIT 1';
@@ -171,6 +211,15 @@ class eventMgr extends classParent
         return $e_url;
 	}
 
+	/**
+	 * Grabs names and status of all of the event's responders
+	 * Given an event's id, this method returns an array of all people who have
+	 * responded to the RSVP form and chosen to either attend or not attend the
+	 * event
+	 *
+	 * @param int $id
+	 * @return array
+	 */
 	public function getResponders($id)
 	{
 		$sql = 'SELECT name,attending FROM ' . TABLE_ATTENDEES . ' WHERE event_id=\''. $id . '\'';
@@ -181,25 +230,41 @@ class eventMgr extends classParent
         }
 
         $responders = array();
+        $responders['attending_count'] = 0;
+        $responders['not_attending_count'] = 0;
 
         while($row = $res->fetchRow())
         {
         	if($row['attending'] == 1)
         	{
         		$responders['attending'][] = $row['name'];
+        		$responders['attending_count'] ++;
         	}
         	else
         	{
         		$responders['not_attending'][] = $row['name'];
+        		$responders['not_attending_count'] ++;
         	}
         }
 
         return $responders;
 	}
 
+	/**
+	 * Sets an event as having been viewed by the (event) creator
+	 * When an event is first created, the creator is presented with a special veiw
+	 * of the event's page.  This special view gives a success message along with
+	 * instructions on how to notify people, etc..  This message should only be
+	 * viewed once, and by the creator of the event only.  To accomplish this, the
+	 * 'e_event_viewed' switch needs to be toggled from 'no' to 'yes' after the
+	 * creator views the page.
+	 *
+	 * @param id $id
+	 * @return bool
+	 */
 	public function eventViewed($id)
 	{
-		$sql = 'UPDATE ' . TABLE_EVENTS . ' SET e_event_viewed=\'yes\' WHERE id=\'' . $id . '\' LIMIT 1';
+		$sql = 'UPDATE ' . TABLE_EVENTS . ' SET e_event_viewed=' . $this->db->quote('yes') . ' WHERE id=\'' . $id . '\' LIMIT 1';
 
 		$res = $this->db->exec($sql);
         if (PEAR::isError($res)) {

@@ -1,28 +1,35 @@
 #linkCreate {
-	padding-right: 60px;
+	padding: 13px 70px 0 0;
 	background: url('../images/next.png') no-repeat;
 	background-position: top right;
-	height: 48px;
+	height: 64px;
 	display: block;
 	text-align: right;
 	text-decoration: none;
 }
+
 .header {
 	background: url('../images/nifty.jpg') no-repeat top right;
 	height: 160px;
+	font-size: 3em;
+	text-align: left
 }
 
-.linkFooterHome {
-	background: url('../images/home.png') no-repeat top right;
-	padding-right: 35px;
+#footer a {
+
 }
 
-.linkFooterCreate {
-	background: url('../images/calendar_date.png') no-repeat top right;
-	padding-right: 35px;
+#linkFooterHome {
+	/*background: url('../images/home.png') no-repeat;*/
+	float: left;
 }
 
-.linkFooterHelp {
-	background: url('../images/info.png') no-repeat top right;
-	padding-right: 35x;
+#linkFooterCreate {
+	/*background: url('../images/splash_new_green1.png') no-repeat;*/
+	float: left;
+}
+
+#linkFooterHelp {
+	/*background: url('../images/info.png') no-repeat;*/
+	float: left;
 }

@@ -15,17 +15,35 @@
  */
 class logger
 {
-	// define log file
+	/**
+	 * Path to the log file
+	 *
+	 * @var string
+	 */
 	private $log_file;
-	// define file pointer
-	private $fp = null;
-	// write message to the log file
 
+	/**
+	 * Handle for the file pointer
+	 *
+	 * @var string
+	 */
+	private $fp = null;
+
+	/**
+	 * Constructor
+	 * Sets up the log file
+	 *
+	 */
 	public function __construct()
 	{
 		$this->log_file = ERROR_LOG_FILE;
 	}
 
+	/**
+	 * Creates and controls the logging of a message
+	 *
+	 * @param Exception $e
+	 */
 	public function log(Exception $e)
 	{
 		$config = $this->getConfig();
@@ -47,6 +65,11 @@ class logger
 		$this->lwrite($message);
 	}
 
+	/**
+	 * Writes a message to a log file
+	 *
+	 * @param string $message
+	 */
 	private function lwrite($message)
 	{
 		// if file pointer doesn't exist, then open log file
@@ -59,7 +82,10 @@ class logger
 		fwrite($this->fp, "$message");
 	}
 
-	// open log file
+	/**
+	 * Opens the log file for writing
+	 *
+	 */
 	private function lopen()
 	{
 		// define log file path and name
@@ -71,6 +97,12 @@ class logger
 		$this->fp = fopen($this->log_file, 'a') or exit("Can't open $lfile!");
 	}
 
+	/**
+	 * Grabs the application configuration
+	 * Grabs the application configuration for inclusion in the error message
+	 *
+	 * @return array
+	 */
 	private function getConfig()
 	{
 		$config = array();

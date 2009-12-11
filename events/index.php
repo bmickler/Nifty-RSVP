@@ -49,9 +49,16 @@ if(isset($_POST['submit']))
 		if($eventMgr->registerAttendee($args))
 		{
 			$e_url = $eventMgr->getUrlById($args['e_id']);
-			if(strlen($e_url) > 3)
+
+			echo $e_url ;
+
+			if(strlen($e_url) > 0)
 			{
-				header("Location: " . WEB_PATH . "/events/?id=$e_url");
+				header("Location: " . WEB_PATH . "events/?id=$e_url");
+			}
+			else
+			{
+				header("Location: " . WEB_PATH . "error.php?id=invalid_event_url");
 			}
 		}
 	} catch ( Exception $e) {
@@ -79,7 +86,9 @@ $eventSmarty->assign('EVENT_LOCATION',$details['e_location']);
 $eventSmarty->assign('EVENT_NOTES',$details['e_notes']);
 $eventSmarty->assign('EVENT_ID',$details['id']);
 $eventSmarty->assign('EVENT_ATTENDEES',$responders['attending']);
+$eventSmarty->assign('EVENT_ATTENDING_COUNT',$responders['attending_count']);
 $eventSmarty->assign('EVENT_NON_ATTENDEES',$responders['not_attending']);
+$eventSmarty->assign('EVENT_NOT_ATTENDING_COUNT',$responders['not_attending_count']);
 
 if($details['e_event_viewed'] == 'no')
 {

@@ -15,14 +15,32 @@
  */
 class controllerException extends niftyException
 {
+	/**
+	 * Prior exception
+	 *
+	 * @var object PHP::Exception
+	 */
 	protected $priorException;
 
+	/**
+	 * Constructor
+	 * Calls the parent constructor and sets the prior exception
+	 *
+	 * @param string $message
+	 * @param mixed $code
+	 * @param Exception $previous
+	 */
 	public function __construct($message, $code = 0, Exception $previous = null)
 	{
 		$this->priorException = $previous;
 		parent::__construct($message, $code);
 	}
 
+	/**
+	 * Getter for the priorException property
+	 *
+	 * @return object
+	 */
 	public function getPrior()
 	{
 		return $this->priorException;

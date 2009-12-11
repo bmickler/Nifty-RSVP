@@ -10,11 +10,7 @@
  * @copyright 2009
  * @license http://www.freebsd.org/copyright/freebsd-license.html Free BSD License
  */
-/**
- * Security feature.  This file cannot be called directly by a user and must be called
- * from a script within the admin/ directory
- */
-if(!defined('IN_NIFTY')){die("Hacking attempt");}
+if(!defined('IN_NIFTY')){die("Hacking attempt");}//  Security feature.  This file cannot be called directly
 
 require_once(FILE_PATH . '/lang/' . CURRENT_LANGUAGE . '/create/footer.php');
 $createSmarty->assign('IMAGE_PATH',CURRENT_TEMPLATE_PATH . 'images/');

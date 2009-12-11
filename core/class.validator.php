@@ -28,26 +28,56 @@ class validator
      */
     private $page_debug;
 
-    public function __construct()
-    {
-		//
-    }
+    public function __construct() {}
+    public function __destruct() {}
 
+    /**
+     * Validates email addresses
+     * Validating email addresses is hard, there's a million regular expression
+     * formulas out there, this will probably change over time.
+     *
+     * @param string $email
+     * @return bool
+     * @todo Create ability to validate internal/intranet email addresses such as
+     * those in the form 'bob@localhost'
+     */
     public function validateEmail($email)
     {
         return (eregi("^[a-z0-9._-]+@+[a-z0-9._-]+.+[a-z]{2,3}$", $email)) ? true : false;
     }
 
+    /**
+     * Validates integers
+     *
+     * @param integer $value Hopefully this is an integer
+     * @param integer $min Minimum allowed integer value
+     * @param integer $max Maximum allowed integer value
+     * @return bool
+     */
     public function validateInteger($value, $min, $max)
     {
     	return($this->isInteger($value)) ? true : false;
     }
 
+    /**
+     * Validates strings
+     *
+     * @param string $string Hopefully this is a string
+     * @param integer $min_len Minimum allowed string length
+     * @param integer $max_len Maximum allowed string length
+     * @return bool
+     */
     public function validateString($string, $min_len, $max_len)
     {
         return((strlen($string) >= $min_len) && (strlen($string) <= $max_len)) ? true : false;
     }
 
+    /**
+     * Validates URLs
+     *
+     * @param string $url
+     * @return bool
+     */
     public function validateUrl($url)
     {
         // $old_regex = "^((ht|f)tp://)((([a-z0-9-]+(.[a-z0-9-]+)*(.[a-z]{2,3}))|(([0-9]{1,3}.){3}([0-9]{1,3})))((/|?)[a-z0-9~#%&'_+=:?.-]*)*)$";
@@ -55,6 +85,15 @@ class validator
         return eregi($regex,$url);
     }
 
+    /**
+     * Validates USA phone numbers
+     *
+     * @param string $phone Phone number string to validate
+     * @param string $countryCode Country code
+     * @return bool
+     * @todo Ability to validate phone numbers from other countries.  ISO country
+     * code recognition
+     */
     public function validateUSAPhone($phone,$countryCode=1)
     {
         $phone = ereg_replace( "[^0-9]", "", $phone );//  strip out non-numerics
@@ -76,6 +115,13 @@ class validator
         return (eregi($regex, $phone)) ? true : false;
     }
 
+    /**
+     * Validates US zip codes
+     *
+     * @param string $state State code
+     * @param mixed $zip5 Zip code
+     * @return bool
+     */
     function validateStateZip5($state, $zip5)
     {
         $state = strtoupper(trim(substr($state,0,2)));
@@ -146,43 +192,67 @@ class validator
         return false;
     }
 
-    //  check whether input is an empty string
+	/**
+	 * check whether input is an empty string
+	 *
+	 * @param string $value
+	 * @return bool
+	 */
     public function isEmpty($value)
     {
         return (!isset($value) || trim($value) == '') ? true : false;
     }
 
-    // check wheter input is a string
+    /**
+     * check wheter input is a string
+     *
+     * @param mixed $value
+     * @return bool
+     */
     public function isString($value)
     {
         return (is_string($value)) ? true : false;
     }
 
-    // check whether input is a number
+    /**
+     * check whether input is a number
+     *
+     * @param mixed $value
+     * @return bool
+     */
     public function isNumber($value)
     {
         return (is_numeric($value)) ? true : false;
     }
 
-    // check whether input is an integer
+    /**
+     * check whether input is an integer
+     *
+     * @param mixed $value
+     * @return bool
+     */
     public function isInteger($value)
     {
         return (intval($value) == $value) ? true : false;
     }
 
-    // check whether input is alphabetic
+    /**
+     * check whether input is alphabetic
+     *
+     * @param mixed $value
+     * @return bool
+     */
     public function isAlpha($value)
     {
         return (preg_match('/^[a-zA-Z]+$/', $value)) ? true : false;
     }
 
-    public function checkCaptch($captcha_actual,$captcha_user)
-    {
-        $captcha_actual = strtoupper(trim($captcha_actual));
-        $captcha_user = strtoupper(trim($captcha_user));
-        return ($captcha_actual == $captcha_user) ? true : false;
-    }
-
+    /**
+     * Checks a string for the pressence of BAD_CHARACTERS
+     *
+     * @param string $string
+     * @return bool
+     */
     public function badCharacters($string)
     {
         $match = preg_match(BAD_CHARACTERS,$string);
