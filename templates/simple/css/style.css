@@ -1,0 +1,28 @@
+#linkCreate {
+	padding-right: 60px;
+	background: url('../images/next.png') no-repeat;
+	background-position: top right;
+	height: 48px;
+	display: block;
+	text-align: right;
+	text-decoration: none;
+}
+.header {
+	background: url('../images/nifty.jpg') no-repeat top right;
+	height: 160px;
+}
+
+.linkFooterHome {
+	background: url('../images/home.png') no-repeat top right;
+	padding-right: 35px;
+}
+
+.linkFooterCreate {
+	background: url('../images/calendar_date.png') no-repeat top right;
+	padding-right: 35px;
+}
+
+.linkFooterHelp {
+	background: url('../images/info.png') no-repeat top right;
+	padding-right: 35x;
+}

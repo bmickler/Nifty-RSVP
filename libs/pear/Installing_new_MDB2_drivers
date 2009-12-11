@@ -1,0 +1,219 @@
+How to install/upgrade new MDB2 drivers
+
+1.  Download the driver package
+
+Visit the PEAR repository to browse and select the driver that you want to 
+install.  Download the archive package to your computer.  In this example I'm 
+installing the MySQL MDB2 Driver version 1.5.0b2.
+
+
+2.  Extract the archive
+
+Extract the archived package.  You'll end up with a folder titled something like
+'MDB2_Driver_mysql-1.5.0b2'
+
+
+MDB2 Driver Package Structure
+-----------------------------
+
+The structure of the folder and it's contents should be similar to this:
+
+./MDB2_Driver_<driver_name>-Version.x.x/
+  |
+  |-/MDB2_Driver_<driver_name>-Version.x.x/
+  |    |
+  |    |-/MDB2/
+  |    |     |
+  |    |     |-/Driver/
+  |    |         |
+  |    |         |-/Datatype/
+  |    |         |    |
+  |    |         |    |-<driver_name>.php
+  |    |         |  
+  |    |         |-/Function/
+  |    |         |    |
+  |    |         |    |-<driver_name>.php
+  |    |         |  
+  |    |         |-/Manager/
+  |    |         |    |
+  |    |         |    |-<driver_name>.php
+  |    |         |  
+  |    |         |-/Native/
+  |    |         |    |
+  |    |         |    |-<driver_name>.php
+  |    |         |  
+  |    |         |-/Reverse/
+  |    |         |    |
+  |    |         |    |-<driver_name>.php
+  |    |         |
+  |    |         |-<driver_name>.php
+  |    |
+  |    |-/tests/
+  |    |    |
+  |    |    |-MDB2_nonstandard_<driver_name>.php
+  |    |
+  |    |-package_<driver_name>.xml
+  |
+  |-package.xml
+
+
+3.  Move files into their proper places
+
+Some of the files and folders in the driver package will not be used.  The ones 
+that we are concerned with are those that are located in the /Driver/ directory
+and its' subdirectories.  First, let's look at the structure of this project's
+integrated PEAR::MDB2 environment to see where these files are going to go:
+
+
+Structure of the integrated PEAR::MDB2 library
+----------------------------------------------
+/[project root folder/
+   |
+   |-/libs/
+       |
+       |-/pear/
+           |
+           |-/MDB2/
+           |   |
+           |   |-/Driver/
+           |   |    |
+           |   |    |-/Datatype/
+           |   |    |    |
+           |   |    |    |-common.php
+           |   |    |
+           |   |    |-/Function/
+           |   |    |    |
+           |   |    |    |-common.php
+           |   |    |
+           |   |    |-/Manager/
+           |   |    |    |
+           |   |    |    |-common.php
+           |   |    |
+           |   |    |-/Native/
+           |   |    |    |
+           |   |    |    |-common.php
+           |   |    |
+           |   |    |-/Reverse/
+           |   |         |
+           |   |         |-common.php
+           |   |
+           |   |-Date.php
+           |   |-Extended.php
+           |   |-Iterator.php
+           |   |-LOB.php
+           |  
+           |-/PEAR/
+           |   |
+           |   |-(a bunch of folders and files...)
+           |
+           |-index.html
+           |-MDB2.php
+           |-PEAR.php
+           |-PEAR5.php
+
+Basically, we're going to copy all of the files from the /Driver folder in the 
+downloaded driver package over into the /Driver folder of the integraded 
+PEAR::MDB2 install while keeping the location of each new driver file intact 
+relative to the directory structure.
+
+To start off, the main mysql.php driver file located in the /Driver folder of the 
+archive should be moved to the local Driver folder.  Then move the mysql.php
+file located in the /Datatype folder of the archive to the local /Datatype folder.
+Continue until all files have been installed locally.  When you're done, the 
+structure of the /MDB2 folder should look like this:
+
+           |-/MDB2/
+              |
+              |-/Driver/
+              |    |
+              |    |-/Datatype/
+              |    |    |
+              |    |    |-common.php
+              |    |    |-mysql.php
+              |    |
+              |    |-/Function/
+              |    |    |
+              |    |    |-common.php
+              |    |    |-mysql.php
+              |    |
+              |    |-/Manager/
+              |    |    |
+              |    |    |-common.php
+              |    |    |-mysql.php
+              |    |
+              |    |-/Native/
+              |    |    |
+              |    |    |-common.php
+              |    |    |-mysql.php
+              |    |
+              |    |-/Reverse/
+              |    |    |
+              |    |    |-common.php
+              |    |    |-mysql.php
+              |    |
+              |    |-mysql.php
+              |
+              |-Date.php
+              |-Extended.php
+              |-Iterator.php
+              |-LOB.php
+
+
+4.  Modify the new driver files to work with the local install
+
+PEAR packages are designed to be installed onto your webserver in a folder that
+is generally located outside of the web root.  The idea is that you'll install
+PEAR and some PEAR packages and all of the web applications that you have running
+will use the local PEAR installation on your webserver.  This application is
+designed to include its' *own* local PEAR installation.  You can install this 
+application on a webserver that does not have PEAR installed on it and it will
+run just fine.  To make that work, we have to make a couple of really small 
+modifications to the driver files.  Really, it's not a big deal.  Here we go:
+
+The files that need to be modified are the new driver files that are located in
+the /Datatype, /Function, /Manager, /Native, and /Reverse directories.  The main
+driver file will be unaffected.  Basically, we're just going to add a 'require_once()'
+call to each of the files so that it can reference the 'common.php' file that is
+co-located in the same directory.
+
+All changes are made at the top of the file around line 50 right before the class 
+declaration.
+
+file:           /Driver/Datatype/mysql.php
+find:           require_once 'MDB2/Driver/Datatype/Common.php';
+replace with:   require_once 'Common.php';
+
+file:           /Driver/Function/mysql.php
+find:           require_once 'MDB2/Driver/Function/Common.php';
+replace with:   require_once 'Common.php';
+
+file:           /Driver/Manager/mysql.php
+find:           require_once 'MDB2/Driver/Manager/Common.php';
+replace with:   require_once 'Common.php';
+
+file:           /Driver/Native/mysql.php
+find:           require_once 'MDB2/Driver/Native/Common.php';
+replace with:   require_once 'Common.php';
+
+file:           /Driver/Reverse/mysql.php
+find:           require_once 'MDB2/Driver/Reverse/Common.php';
+replace with:   require_once 'Common.php';
+
+
+Also, the 'common.php' file located in the /Datatype folder has already been 
+modified to be able to include the LOB.php file located up one directory.  This 
+modification is at the top of the file:
+
+line 47  //require_once 'MDB2/LOB.php';
+line 48  require_once("../LOB.php");
+
+
+
+
+
+
+
+
+
+
+
