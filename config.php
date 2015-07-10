@@ -12,9 +12,9 @@
  */
 if(!defined('IN_NIFTY')){die("Hacking attempt");}//  Security feature.  This file cannot be called directly
 
-define('WEB_PATH','http://aag0k8ubm63051/nifty-rsvp/');
+define('WEB_PATH','http://mydomain/nifty-rsvp/');
 define('FILE_PATH','c:\http\www\nifty-rsvp\\');
-define('DOMAIN_NAME','aag0k8ubm63051');
+define('DOMAIN_NAME','mydomain');
 
 //define('WEB_PATH','http://bluenote/niftyrsvp/');
 //define('FILE_PATH','/var/www/niftyrsvp/');
